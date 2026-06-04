@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,15 +17,56 @@ public class CsvAnalysis implements ICsvAnalysis{
         // Warn the user if an exception is thrown and why. Use a specific exception class, not the Exception class.
         // Use the Finally block to ensure that the Scanner is closed even when an exception is thrown.
 
-        Scanner scan = new Scanner(dataFile);
         String[] data;
+        Scanner scan = null;
 
-        String input = scan.nextLine();     // First line contains the data categories,
-        data = input.split(",");      // so it separates them into the csvCategories
-        for(String myStr : data){           // ArrayList
-            csvCategories.add( myStr );     //
-        }                                   //
+        /**
+         * Exception handling working when working on Files and Scanners. Finally closes the Scanner block to ensure
+         * the Scanner isn't left open.
+         */
+        try{
+            scan = new Scanner(dataFile);
 
+            /** 
+             * This is for the first line for CSV categories. checks for next line, and scans it and put's it into csvCategories.
+             */
+            if (scan.hasNextLine()){
+                String input = scan.nextLine();
+                data = input.split(",");
+
+                for (String str:data){
+                    csvCategories.add(str);
+                }
+            /**
+             * Else block throws EOFException to ensure that it doesn't pass through. 
+             */
+            } else { 
+                throw new EOFException("No header line for file");
+            }
+
+            StringBuilder strBuilder = new StringBuilder(); 
+            while (scan.hasNextLine()){
+                String input = scan.nextLine();
+                strBuilder.append(input);
+                data = input.split(",");
+                csvData.add (data);
+            }
+
+            csvFileToString = strBuilder.toString();
+
+        } catch(EOFException | FileNotFoundException | FileAlreadyExistsException e){
+            System.err.println("An Error Occured");
+            e.printStackTrace();
+
+
+        } finally {
+            /**
+             * Checks scan to make sure it is type Scanner, and not null. Otherwise we would get a nullPointerException
+             */
+            if (scan != null) scan.close();
+
+        }
+        
         StringBuilder strBuilder = new StringBuilder("");   // For the rest of the lines in the csv file
         while (scan.hasNextLine()) {                        // first the data are added in the strBuilder to
             input = scan.nextLine();                        // be converted into a string.
@@ -32,8 +74,6 @@ public class CsvAnalysis implements ICsvAnalysis{
             data = input.split(",");                  // so each row of the ArrayList contains the
             csvData.add( data );                            // data of each dog breed.
         }
-        csvFileToString = strBuilder.toString();
-
     }
 
     public CsvAnalysis createCsvAnalysis(String filename){ return new CsvAnalysis(filename); }
