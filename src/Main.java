@@ -8,7 +8,7 @@ public class Main {
         ArrayList<IDog> emptyDogs = new ArrayList<>();                   // ArrayList to test the exceptions.
 
         ArrayList<String> categories =  myDogs.getCsvCategories();
-        for( int i = 0; i < categories.size(); i++ ){
+        for ( int i = 0; i < categories.size(); i++ ){
 //            System.out.println( " Index " + i + " data : " + categories.get(i) );
         }
 
@@ -19,14 +19,14 @@ public class Main {
 
         // For debugging purposes. After the dog objects are added in the dogs ArrayList, uncomment any print statement to see the available choices.
         for( int i = 0; i < dogs.size(); i++ ){
-//            System.out.println( dogs.get(i).getBreed() );
-//            System.out.println( dogs.get(i).getCountryOfOrigin() );
-//            System.out.println( dogs.get(i).getLongevity() );
-//            System.out.println( dogs.get(i).getEyeColor() );
-//            System.out.println( dogs.get(i).getFurColor() );
-//            System.out.println( dogs.get(i).getHeight() );
-//            System.out.println( dogs.get(i).getCharacterTraits() );
-//            System.out.println( dogs.get(i).getCommonHealthProblems() );
+            System.out.println( dogs.get(i).getBreed() );
+            System.out.println( dogs.get(i).getCountryOfOrigin() );
+            System.out.println( dogs.get(i).getLongevity() );
+            System.out.println( dogs.get(i).getEyeColor() );
+            System.out.println( dogs.get(i).getFurColor() );
+            System.out.println( dogs.get(i).getHeight() );
+            System.out.println( dogs.get(i).getCharacterTraits() );
+            System.out.println( dogs.get(i).getCommonHealthProblems() );
         }
 
         userInput = "German Shepherd";
@@ -36,12 +36,16 @@ public class Main {
 
         userInput = "Germany";
 
-        // Print all the bredds from a specific country.
-        System.out.println("The dog breeds coming from " + userInput + " are:\n" + dogs.getFirst().getDogsFromCountry(dogs, userInput) + '\n');
+        try {
+            System.out.println("The dog breeds coming from " + userInput + " are:\n" + dogs.getFirst().getDogsFromCountry(dogs, userInput) + '\n');
 
-        // Print all the bredds from a specific country.
-        System.out.println("The dog breeds coming from " + userInput + " are:\n" + dogs.getFirst().getDogsFromCountry(emptyDogs, userInput) + '\n');
+            // Print all the bredds from a specific country.
+            System.out.println("The dog breeds coming from " + userInput + " are:\n" + dogs.getFirst().getDogsFromCountry(emptyDogs, userInput) + '\n');
 
+        } catch (EmptyListException | NoResultException e) {
+            System.out.println("GetDogsFromCountry did not run. \n" + e.getMessage());
+        }
+        
         userInput = "Brown";
 
         // Print all the breed wit ha specific fur color.
